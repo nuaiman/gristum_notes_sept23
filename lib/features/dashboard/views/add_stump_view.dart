@@ -1,0 +1,245 @@
+// ignore_for_file: prefer_final_fields
+
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/utils.dart';
+import '../../../models/stump_model.dart';
+import '../controllers/single_project_controller.dart';
+import '../widgets/stump_details_field.dart';
+
+class AddStumpView extends ConsumerStatefulWidget {
+  const AddStumpView({super.key});
+
+  @override
+  ConsumerState<AddStumpView> createState() => _AddStumpViewState();
+}
+
+class _AddStumpViewState extends ConsumerState<AddStumpView> {
+  File? _pickedImage;
+  // File? _pickedVideo;
+  List<File> _images = [];
+
+  String _height = '0';
+  String _width = '0';
+  String _price = '0';
+  String _cost = '0';
+
+  String _note = '';
+
+  void getStumpPrice(double height, double width, double price) {
+    // Tree dimensions
+    double widthInch = double.parse(_width);
+    double heightInch = double.parse(_height);
+
+    // Price per inch for width
+    double widthPricePerInch = double.parse(_price);
+
+    // Calculate total price for width
+    double totalWidthPrice = widthInch * widthPricePerInch;
+
+    // Calculate price for height
+    double heightPrice = 0;
+
+    if (heightInch > 24) {
+      // Price for the first 12 inches (free)
+      heightPrice += totalWidthPrice * 0 * 12;
+
+      // Price for the next 12 inches (from 12 - 24 inches)
+      heightPrice += totalWidthPrice * 0.01 * (heightInch - 24 - 12);
+
+      // Price for anything above 24 inches
+      heightPrice += totalWidthPrice * 0.2;
+    } else if (heightInch > 12) {
+      // Price for the first 12 inches (free)
+      heightPrice += totalWidthPrice * 0 * 12;
+
+      // Price for the next (heightInch - 12) inches
+      heightPrice += totalWidthPrice * 0.01 * (heightInch - 12);
+    } else {
+      // Price for the first (heightInch) inches (free)
+      heightPrice += totalWidthPrice * 0 * heightInch;
+    }
+
+    // Calculate total cutting price
+    double totalCuttingPrice = totalWidthPrice + heightPrice;
+    setState(() {
+      _cost = totalCuttingPrice.ceil().toString();
+    });
+  }
+
+  void _onPickImage() async {
+    _pickedImage = await pickImage();
+    if (_pickedImage != null) {
+      _images.add(_pickedImage!);
+    }
+    setState(() {});
+  }
+
+  // void _onPickVideo() async {
+  //   final pickedVideo = await pickVideo();
+  //   if (pickedVideo != null) {
+  //     setState(() {
+  //       _pickedVideo = pickedVideo;
+  //     });
+  //   }
+  // }
+
+  void addStump() {
+    if (_height == '0' || _width == '0' || _images.isEmpty) {
+      showSnackbar(context, 'Must add height, width & image(s)');
+      return;
+    }
+
+    List<String> listOfImagePaths = [];
+    for (var element in _images) {
+      listOfImagePaths.add(element.path);
+    }
+
+    StumpModel stump = StumpModel(
+      width: double.parse(_width),
+      height: double.parse(_height),
+      price: double.parse(_price),
+      imagesPath: listOfImagePaths,
+      cost: double.parse(_cost),
+      note: _note,
+    );
+
+    print(stump);
+    ref.read(singleProjectControllerProvider.notifier).addStump(stump);
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    getStumpPrice(
+        double.parse(_height), double.parse(_width), double.parse(_price));
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Stump'),
+        actions: [
+          IconButton(
+            onPressed: addStump,
+            icon: const Icon(Icons.save),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            StumpDetailsField(
+              labelText: 'Height',
+              onSetState: (String value) {
+                setState(() {
+                  _height = value;
+                });
+              },
+            ),
+            StumpDetailsField(
+              labelText: 'Width',
+              onSetState: (String value) {
+                setState(() {
+                  _width = value;
+                });
+              },
+            ),
+            StumpDetailsField(
+              labelText: 'Price Per Inch',
+              onSetState: (String value) {
+                setState(() {
+                  _price = value;
+                });
+              },
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: StumpDetailsField(
+                    needColumn: false,
+                    labelText: 'Notes',
+                    onSetState: (String value) {
+                      setState(() {
+                        _note = value;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Card(
+                  child: SizedBox(
+                    width: 50,
+                    height: 45,
+                    child: IconButton(
+                      onPressed: _onPickImage,
+                      icon: const Icon(Icons.camera_alt),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            if (_images.isNotEmpty)
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.grey.shade100,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GridView.builder(
+                      itemCount: _images.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 3 / 4,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemBuilder: (context, index) => Stack(
+                        children: [
+                          Container(
+                            height: 300,
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.file(
+                                _images[index],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 5,
+                            right: 10,
+                            child: CircleAvatar(
+                              child: IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  _images.remove(_images[index]);
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+      // -----------------------------------------------------------------------
+      bottomNavigationBar: SizedBox(
+        height: 60,
+        child: Center(child: Text('Total : \$ $_cost')),
+      ),
+    );
+  }
+}
