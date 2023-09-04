@@ -4,6 +4,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gristum_notes_app/features/dashboard/views/video_player_view.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../core/utils.dart';
 import '../../../models/stump_model.dart';
@@ -105,12 +108,50 @@ class _AddStumpViewState extends ConsumerState<AddStumpView> {
       imagesPath: listOfImagePaths,
       cost: double.parse(_cost),
       note: _note,
+      videoPath: _videoFile != null ? _videoFile!.path : '',
     );
 
     print(stump);
     ref.read(singleProjectControllerProvider.notifier).addStump(stump);
     Navigator.of(context).pop();
   }
+
+  // -------------
+  File? _videoFile;
+  late VideoPlayerController _controller;
+
+  Future<void> pickVideo() async {
+    final pickedFile =
+        await ImagePicker().pickVideo(source: ImageSource.camera);
+    if (pickedFile != null) {
+      final videoFile = File(pickedFile.path);
+      setState(() {
+        _videoFile = videoFile;
+        _controller = VideoPlayerController.file(videoFile)
+          ..initialize().then((_) {
+            _controller.setLooping(true);
+            setState(() {});
+          });
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset('assets/placeholder.mp4')
+      ..initialize().then((_) {
+        _controller.setLooping(true);
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+  // -------------
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +215,17 @@ class _AddStumpViewState extends ConsumerState<AddStumpView> {
                     width: 50,
                     height: 45,
                     child: IconButton(
+                      onPressed: pickVideo,
+                      icon: const Icon(Icons.video_camera_back),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Card(
+                  child: SizedBox(
+                    width: 50,
+                    height: 45,
+                    child: IconButton(
                       onPressed: _onPickImage,
                       icon: const Icon(Icons.camera_alt),
                     ),
@@ -181,6 +233,37 @@ class _AddStumpViewState extends ConsumerState<AddStumpView> {
                 ),
               ],
             ),
+            const SizedBox(height: 5),
+            if (_videoFile != null)
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey.shade100,
+                ),
+                width: MediaQuery.of(context).size.width,
+                height: 100,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              VideoPlayerView(videoFile: _videoFile!),
+                        ),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             const SizedBox(height: 5),
             if (_images.isNotEmpty)
               Expanded(

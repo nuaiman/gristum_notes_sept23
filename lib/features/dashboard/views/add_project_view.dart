@@ -10,6 +10,7 @@ import 'package:gristum_notes_app/models/project_model.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'add_stump_view.dart';
+import 'video_player_view.dart';
 
 class AddProjectView extends ConsumerStatefulWidget {
   const AddProjectView({super.key});
@@ -365,25 +366,54 @@ class _AddProjectViewState extends ConsumerState<AddProjectView> {
                             ],
                           ),
                           const Divider(),
-                          SizedBox(
-                            height: 60,
-                            child: ListView.separated(
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(width: 5),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: stump.imagesPath.length,
-                              itemBuilder: (context, index) => SizedBox(
-                                width: 60,
-                                height: 60,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(6),
-                                  child: Image.file(
-                                    File(stump.imagesPath[index]),
-                                    fit: BoxFit.cover,
+                          Row(
+                            children: [
+                              if (stump.videoPath != '')
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  height: 60,
+                                  width: 60,
+                                  child: IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                VideoPlayerView(
+                                              videoFile: File(
+                                                  stump.videoPath.toString()),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(Icons.play_arrow)),
+                                ),
+                              Expanded(
+                                child: SizedBox(
+                                  height: 60,
+                                  child: ListView.separated(
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(width: 5),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: stump.imagesPath.length,
+                                    itemBuilder: (context, index) => SizedBox(
+                                      width: 60,
+                                      height: 60,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(6),
+                                        child: Image.file(
+                                          File(stump.imagesPath[index]),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),

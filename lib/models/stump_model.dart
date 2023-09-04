@@ -14,6 +14,7 @@ class StumpModel {
   final double price;
   final double cost;
   final List<String> imagesPath;
+  final String? videoPath;
 
   StumpModel({
     String? id,
@@ -24,6 +25,7 @@ class StumpModel {
     required this.price,
     required this.cost,
     required this.imagesPath,
+    this.videoPath,
   }) : id = id ?? uuid.v4();
 
   StumpModel copyWith({
@@ -35,6 +37,7 @@ class StumpModel {
     double? price,
     double? cost,
     List<String>? imagesPath,
+    String? videoPath,
   }) {
     return StumpModel(
       id: id ?? this.id,
@@ -45,6 +48,7 @@ class StumpModel {
       price: price ?? this.price,
       cost: cost ?? this.cost,
       imagesPath: imagesPath ?? this.imagesPath,
+      videoPath: videoPath ?? this.videoPath,
     );
   }
 
@@ -59,6 +63,9 @@ class StumpModel {
     result.addAll({'price': price});
     result.addAll({'cost': cost});
     result.addAll({'imagesPath': imagesPath});
+    if (videoPath != null) {
+      result.addAll({'videoPath': videoPath});
+    }
 
     return result;
   }
@@ -73,6 +80,7 @@ class StumpModel {
       price: map['price']?.toDouble() ?? 0.0,
       cost: map['cost']?.toDouble() ?? 0.0,
       imagesPath: List<String>.from(map['imagesPath']),
+      videoPath: map['videoPath'],
     );
   }
 
@@ -83,7 +91,7 @@ class StumpModel {
 
   @override
   String toString() {
-    return 'StumpModel(id: $id, isBasic: $isBasic, width: $width, height: $height, note: $note, price: $price, cost: $cost, imagesPath: $imagesPath)';
+    return 'StumpModel(id: $id, isBasic: $isBasic, width: $width, height: $height, note: $note, price: $price, cost: $cost, imagesPath: $imagesPath, videoPath: $videoPath)';
   }
 
   @override
@@ -98,7 +106,8 @@ class StumpModel {
         other.note == note &&
         other.price == price &&
         other.cost == cost &&
-        listEquals(other.imagesPath, imagesPath);
+        listEquals(other.imagesPath, imagesPath) &&
+        other.videoPath == videoPath;
   }
 
   @override
@@ -110,6 +119,7 @@ class StumpModel {
         note.hashCode ^
         price.hashCode ^
         cost.hashCode ^
-        imagesPath.hashCode;
+        imagesPath.hashCode ^
+        videoPath.hashCode;
   }
 }
