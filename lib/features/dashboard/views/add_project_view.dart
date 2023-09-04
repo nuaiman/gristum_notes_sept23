@@ -78,7 +78,7 @@ class _AddProjectViewState extends ConsumerState<AddProjectView> {
           ref.read(singleProjectControllerProvider).stumps.length.toDouble(),
     );
 
-    ref.read(projectsControllerProvider.notifier).addSingleProject(project);
+    ref.read(projectsControllerProvider.notifier).addProject(project);
 
     Navigator.of(context).pop();
   }

@@ -7,7 +7,6 @@ const uuid = Uuid();
 
 class StumpModel {
   final String id;
-  final bool isBasic;
   final double width;
   final double height;
   final String note;
@@ -18,7 +17,6 @@ class StumpModel {
 
   StumpModel({
     String? id,
-    this.isBasic = true,
     required this.width,
     required this.height,
     required this.note,
@@ -30,7 +28,6 @@ class StumpModel {
 
   StumpModel copyWith({
     String? id,
-    bool? isBasic,
     double? width,
     double? height,
     String? note,
@@ -41,7 +38,6 @@ class StumpModel {
   }) {
     return StumpModel(
       id: id ?? this.id,
-      isBasic: isBasic ?? this.isBasic,
       width: width ?? this.width,
       height: height ?? this.height,
       note: note ?? this.note,
@@ -56,7 +52,6 @@ class StumpModel {
     final result = <String, dynamic>{};
 
     result.addAll({'id': id});
-    result.addAll({'isBasic': isBasic});
     result.addAll({'width': width});
     result.addAll({'height': height});
     result.addAll({'note': note});
@@ -73,7 +68,6 @@ class StumpModel {
   factory StumpModel.fromMap(Map<String, dynamic> map) {
     return StumpModel(
       id: map['id'] ?? '',
-      isBasic: map['isBasic'] ?? false,
       width: map['width']?.toDouble() ?? 0.0,
       height: map['height']?.toDouble() ?? 0.0,
       note: map['note'] ?? '',
@@ -91,7 +85,7 @@ class StumpModel {
 
   @override
   String toString() {
-    return 'StumpModel(id: $id, isBasic: $isBasic, width: $width, height: $height, note: $note, price: $price, cost: $cost, imagesPath: $imagesPath, videoPath: $videoPath)';
+    return 'StumpModel(id: $id, width: $width, height: $height, note: $note, price: $price, cost: $cost, imagesPath: $imagesPath, videoPath: $videoPath)';
   }
 
   @override
@@ -100,7 +94,6 @@ class StumpModel {
 
     return other is StumpModel &&
         other.id == id &&
-        other.isBasic == isBasic &&
         other.width == width &&
         other.height == height &&
         other.note == note &&
@@ -113,7 +106,6 @@ class StumpModel {
   @override
   int get hashCode {
     return id.hashCode ^
-        isBasic.hashCode ^
         width.hashCode ^
         height.hashCode ^
         note.hashCode ^
