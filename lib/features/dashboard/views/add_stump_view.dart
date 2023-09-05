@@ -10,11 +10,11 @@ import 'package:video_player/video_player.dart';
 
 import '../../../core/utils.dart';
 import '../../../models/stump_model.dart';
-import '../controllers/single_project_controller.dart';
 import '../widgets/stump_details_field.dart';
 
 class AddStumpView extends ConsumerStatefulWidget {
-  const AddStumpView({super.key});
+  final Function(StumpModel) addStumpToProject;
+  const AddStumpView({super.key, required this.addStumpToProject});
 
   @override
   ConsumerState<AddStumpView> createState() => _AddStumpViewState();
@@ -111,8 +111,12 @@ class _AddStumpViewState extends ConsumerState<AddStumpView> {
       videoPath: _videoFile != null ? _videoFile!.path : '',
     );
 
-    print(stump);
-    ref.read(singleProjectControllerProvider.notifier).addStump(stump);
+    // ref.read(singleProjectControllerProvider.notifier).addStump(stump);
+
+    print('merw');
+
+    widget.addStumpToProject(stump);
+
     Navigator.of(context).pop();
   }
 
