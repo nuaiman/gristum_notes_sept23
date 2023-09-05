@@ -131,8 +131,6 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
 
     // ref.read(singleProjectControllerProvider.notifier).addStump(stump);
 
-    print(stump.id);
-
     widget.addStumpToProject!(stump);
 
     Navigator.of(context).pop();

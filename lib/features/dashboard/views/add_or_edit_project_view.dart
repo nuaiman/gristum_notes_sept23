@@ -76,10 +76,6 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
 
   @override
   void initState() {
-    print('================ initsdfsdfsdfsdfsdfsdf');
-
-    // ref.read(singleProjectControllerProvider.notifier).clearState();
-
     if (widget.editableProject != null) {
       _nameController = widget.editableProject!.customerName;
       _phoneController = widget.editableProject!.customerPhone;
@@ -101,12 +97,7 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
   }
 
   void addStumpToProject(StumpModel stump) {
-    print(stump.id);
-
     final stumpIsEdited = _stumps.any((element) => element.id == stump.id);
-
-    print(stumpIsEdited);
-
     if (stumpIsEdited == true) {
       setState(() {
         final stumpIndex =
@@ -143,29 +134,48 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
       return total;
     }
 
-    final project = ProjectModel(
-      customerName: _nameController,
-      customerPhone: _phoneController,
-      customerEmail: _emailController,
-      note: _noteController,
-      firstCallDate: _firstCallDate,
-      nextCallDate: _nextCallDate,
-      latitude: _latitude,
-      longitude: _longitude,
-      address: _addressController,
-      stumps: _stumps,
-      stumpsCount: _stumps.length,
-      totalCost: calculateTotalCost(_stumps),
-    );
+    print(widget.editableProject);
 
-    ref.read(projectsControllerProvider.notifier).addProject(project);
+    final project = widget.editableProject != null
+        ? widget.editableProject!.copyWith(
+            id: widget.editableProject!.id,
+            customerName: _nameController,
+            customerPhone: _phoneController,
+            customerEmail: _emailController,
+            note: _noteController,
+            firstCallDate: _firstCallDate,
+            nextCallDate: _nextCallDate,
+            latitude: _latitude,
+            longitude: _longitude,
+            address: _addressController,
+            stumps: _stumps,
+            stumpsCount: _stumps.length,
+            totalCost: calculateTotalCost(_stumps),
+          )
+        : ProjectModel(
+            customerName: _nameController,
+            customerPhone: _phoneController,
+            customerEmail: _emailController,
+            note: _noteController,
+            firstCallDate: _firstCallDate,
+            nextCallDate: _nextCallDate,
+            latitude: _latitude,
+            longitude: _longitude,
+            address: _addressController,
+            stumps: _stumps,
+            stumpsCount: _stumps.length,
+            totalCost: calculateTotalCost(_stumps),
+          );
+
+    widget.editableProject != null
+        ? ref.read(projectsControllerProvider.notifier).addProject(project)
+        : ref.read(projectsControllerProvider.notifier).editProjects(project);
 
     Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final project = ref.watch(singleProjectControllerProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(

@@ -8,6 +8,7 @@ class ProjectsController extends StateNotifier<List<ProjectModel>> {
   ProjectsController() : super([]);
 
   void addProject(ProjectModel project) async {
+    print('adding');
     final prefs = await SharedPreferences.getInstance();
     final encodedData = jsonEncode(project);
     final newState = [...state, project];
@@ -34,6 +35,24 @@ class ProjectsController extends StateNotifier<List<ProjectModel>> {
       final newState = [...state];
       state = newState.toSet().toList();
     }
+  }
+
+  void editProjects(ProjectModel project) async {
+    print('editing');
+
+    final prefs = await SharedPreferences.getInstance();
+
+    final projectIndex =
+        state.indexWhere((element) => element.id == project.id);
+    state.removeAt(projectIndex);
+    state.insert(projectIndex, project);
+
+    final encodedData = jsonEncode(project);
+    // -------------------------------------------------------------------------
+    final newState = [...state, project];
+    state = newState;
+    // -------------------------------------------------------------------------
+    prefs.setString(project.id, encodedData);
   }
 }
 // -----------------------------------------------------------------------------
