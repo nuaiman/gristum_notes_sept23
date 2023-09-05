@@ -11,6 +11,7 @@ import 'package:video_player/video_player.dart';
 import '../../../core/utils.dart';
 import '../../../models/stump_model.dart';
 import '../widgets/stump_details_field.dart';
+import 'image_painter.dart';
 
 class AddorEditStumpView extends ConsumerStatefulWidget {
   final Function(StumpModel)? addStumpToProject;
@@ -164,6 +165,12 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
           _controller.setLooping(true);
           setState(() {});
         });
+    });
+  }
+
+  void getEditedImage(File editedImage) {
+    setState(() {
+      _images.add(editedImage);
     });
   }
 
@@ -363,12 +370,44 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
                               top: 5,
                               right: 10,
                               child: CircleAvatar(
-                                child: IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () {
-                                    _images.remove(_images[index]);
-                                    setState(() {});
-                                  },
+                                radius: 15,
+                                child: Center(
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.close,
+                                      size: 10,
+                                    ),
+                                    onPressed: () {
+                                      _images.remove(_images[index]);
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 5,
+                              left: 10,
+                              child: CircleAvatar(
+                                radius: 15,
+                                child: Center(
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      size: 10,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ImagePainterView(
+                                            imageFile: _images[index],
+                                            onImageEdited: getEditedImage,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
