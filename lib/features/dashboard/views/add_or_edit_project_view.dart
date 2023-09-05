@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:gristum_notes_app/models/stump_model.dart';
 import 'package:location/location.dart';
@@ -24,6 +25,8 @@ class AddorEditProjectView extends ConsumerStatefulWidget {
 
 class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
   final _formKey = GlobalKey<FormState>();
+
+  int selectedTabIndex = 0;
 
   String _nameController = '';
   String _phoneController = '';
@@ -77,6 +80,26 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
   @override
   void initState() {
     if (widget.editableProject != null) {
+      if (widget.editableProject!.isCancelled == true) {
+        setState(() {
+          selectedTabIndex = 2;
+        });
+      } else if (widget.editableProject!.isCancelled == true &&
+          widget.editableProject!.isComplete == true) {
+        setState(() {
+          selectedTabIndex = 2;
+        });
+      } else if (widget.editableProject!.isCancelled == false &&
+          widget.editableProject!.isComplete == true) {
+        setState(() {
+          selectedTabIndex = 1;
+        });
+      } else {
+        setState(() {
+          selectedTabIndex = 0;
+        });
+      }
+
       _nameController = widget.editableProject!.customerName;
       _phoneController = widget.editableProject!.customerPhone;
       _emailController = widget.editableProject!.customerEmail;
@@ -151,6 +174,9 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
             stumps: _stumps,
             stumpsCount: _stumps.length,
             totalCost: calculateTotalCost(_stumps),
+            isActive: selectedTabIndex == 0 ? true : false,
+            isComplete: selectedTabIndex == 1 ? true : false,
+            isCancelled: selectedTabIndex == 2 ? true : false,
           )
         : ProjectModel(
             customerName: _nameController,
@@ -193,6 +219,31 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (widget.editableProject != null)
+                FlutterToggleTab(
+                  marginSelected: const EdgeInsets.all(8),
+                  borderRadius: 10,
+                  selectedIndex: selectedTabIndex,
+                  selectedTextStyle: const TextStyle(color: Colors.white),
+                  unSelectedTextStyle: const TextStyle(color: Colors.black),
+                  selectedBackgroundColors: [
+                    selectedTabIndex == 0
+                        ? Colors.blue
+                        : selectedTabIndex == 1
+                            ? Colors.green
+                            : Colors.red
+                  ],
+                  unSelectedBackgroundColors: [Colors.grey[200]!],
+                  labels: const ["Active", "Complete", "Cancelled"],
+                  selectedLabelIndex: (index) {
+                    setState(() {
+                      setState(() {
+                        selectedTabIndex = index;
+                      });
+                      // widget.onChanged(selectedTabIndex);
+                    });
+                  },
+                ),
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 4),
                 title: const Text('Name'),

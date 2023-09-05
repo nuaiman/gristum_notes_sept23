@@ -13,6 +13,7 @@ class ProjectModel {
   final String customerPhone;
   final String customerEmail;
   final String note;
+  final bool isActive;
   final bool isComplete;
   final bool isCancelled;
   final String address;
@@ -26,17 +27,18 @@ class ProjectModel {
 
   ProjectModel({
     String? id,
-    required this.firstCallDate,
-    required this.nextCallDate,
     required this.customerName,
     required this.customerPhone,
     required this.customerEmail,
     required this.note,
+    this.isActive = true,
     this.isComplete = false,
     this.isCancelled = false,
     required this.address,
     required this.latitude,
     required this.longitude,
+    required this.firstCallDate,
+    required this.nextCallDate,
     required this.stumps,
     required this.stumpsCount,
     required this.totalCost,
@@ -48,6 +50,7 @@ class ProjectModel {
     String? customerPhone,
     String? customerEmail,
     String? note,
+    bool? isActive,
     bool? isComplete,
     bool? isCancelled,
     String? address,
@@ -65,6 +68,7 @@ class ProjectModel {
       customerPhone: customerPhone ?? this.customerPhone,
       customerEmail: customerEmail ?? this.customerEmail,
       note: note ?? this.note,
+      isActive: isActive ?? this.isActive,
       isComplete: isComplete ?? this.isComplete,
       isCancelled: isCancelled ?? this.isCancelled,
       address: address ?? this.address,
@@ -86,6 +90,7 @@ class ProjectModel {
     result.addAll({'customerPhone': customerPhone});
     result.addAll({'customerEmail': customerEmail});
     result.addAll({'note': note});
+    result.addAll({'isActive': isActive});
     result.addAll({'isComplete': isComplete});
     result.addAll({'isCancelled': isCancelled});
     result.addAll({'address': address});
@@ -111,6 +116,7 @@ class ProjectModel {
       customerPhone: map['customerPhone'] ?? '',
       customerEmail: map['customerEmail'] ?? '',
       note: map['note'] ?? '',
+      isActive: map['isActive'] ?? false,
       isComplete: map['isComplete'] ?? false,
       isCancelled: map['isCancelled'] ?? false,
       address: map['address'] ?? '',
@@ -136,7 +142,7 @@ class ProjectModel {
 
   @override
   String toString() {
-    return 'ProjectModel(id: $id, customerName: $customerName, customerPhone: $customerPhone, customerEmail: $customerEmail, note: $note, isComplete: $isComplete, isCancelled: $isCancelled, address: $address, latitude: $latitude, longitude: $longitude, firstCallDate: $firstCallDate, nextCallDate: $nextCallDate, stumps: $stumps, stumpsCount: $stumpsCount, totalCost: $totalCost)';
+    return 'ProjectModel(id: $id, customerName: $customerName, customerPhone: $customerPhone, customerEmail: $customerEmail, note: $note, isActive: $isActive, isComplete: $isComplete, isCancelled: $isCancelled, address: $address, latitude: $latitude, longitude: $longitude, firstCallDate: $firstCallDate, nextCallDate: $nextCallDate, stumps: $stumps, stumpsCount: $stumpsCount, totalCost: $totalCost)';
   }
 
   @override
@@ -149,6 +155,7 @@ class ProjectModel {
         other.customerPhone == customerPhone &&
         other.customerEmail == customerEmail &&
         other.note == note &&
+        other.isActive == isActive &&
         other.isComplete == isComplete &&
         other.isCancelled == isCancelled &&
         other.address == address &&
@@ -168,6 +175,7 @@ class ProjectModel {
         customerPhone.hashCode ^
         customerEmail.hashCode ^
         note.hashCode ^
+        isActive.hashCode ^
         isComplete.hashCode ^
         isCancelled.hashCode ^
         address.hashCode ^

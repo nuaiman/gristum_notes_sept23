@@ -236,6 +236,7 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
                   });
                 },
               ),
+              const SizedBox(height: 8),
               StumpDetailsField(
                 initialValue: _width,
                 labelText: 'Width',
@@ -245,6 +246,7 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
                   });
                 },
               ),
+              const SizedBox(height: 8),
               StumpDetailsField(
                 initialValue: _price,
                 labelText: 'Price Per Inch',
@@ -254,6 +256,7 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
                   });
                 },
               ),
+              const SizedBox(height: 5),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
