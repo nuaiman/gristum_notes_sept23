@@ -46,7 +46,6 @@ class _ProjectsViewState extends ConsumerState<ProjectsView> {
           final project = ref.watch(projectsControllerProvider)[index];
           return GestureDetector(
             onTap: () {
-              print(project.firstCallDate);
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => AddorEditProjectView(
                   editableProject: project,

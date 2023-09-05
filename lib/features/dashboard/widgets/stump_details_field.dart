@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class StumpDetailsField extends StatelessWidget {
   final String labelText;
   final bool needColumn;
+  final String initialValue;
   final Function(String value) onSetState;
 
   const StumpDetailsField({
     super.key,
     required this.labelText,
     required this.onSetState,
+    required this.initialValue,
     this.needColumn = false,
   });
 
@@ -21,7 +23,8 @@ class StumpDetailsField extends StatelessWidget {
               SizedBox(
                 child: Text(labelText),
               ),
-              TextField(
+              TextFormField(
+                initialValue: initialValue,
                 onTapOutside: (event) {
                   FocusManager.instance.primaryFocus!.unfocus();
                 },
@@ -42,7 +45,8 @@ class StumpDetailsField extends StatelessWidget {
                 child: Text(labelText),
               ),
               Expanded(
-                child: TextField(
+                child: TextFormField(
+                  initialValue: initialValue,
                   onChanged: (value) {
                     if (value.isEmpty) {
                       return;

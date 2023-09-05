@@ -7,12 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gristum_notes_app/core/utils.dart';
-import 'package:gristum_notes_app/features/dashboard/controllers/single_project_controller.dart';
 import 'package:gristum_notes_app/models/project_model.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import '../controllers/projects_controller.dart';
-import 'add_stump_view.dart';
+import 'add_or_edit_stump_view.dart';
 import 'video_player_view.dart';
 
 class AddorEditProjectView extends ConsumerStatefulWidget {
@@ -62,14 +61,10 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
       }
     }
 
-    print('getting');
-
     locationData = await location.getLocation();
 
     List<geo.Placemark> placeList = await geo.placemarkFromCoordinates(
         locationData.latitude!, locationData.longitude!);
-
-    print('done');
 
     setState(() {
       _latitude = locationData.latitude!;
@@ -81,6 +76,8 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
 
   @override
   void initState() {
+    print('================ initsdfsdfsdfsdfsdfsdf');
+
     // ref.read(singleProjectControllerProvider.notifier).clearState();
 
     if (widget.editableProject != null) {
@@ -104,11 +101,24 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
   }
 
   void addStumpToProject(StumpModel stump) {
-    print('meow meow');
-    print(stump);
-    setState(() {
-      _stumps.add(stump);
-    });
+    print(stump.id);
+
+    final stumpIsEdited = _stumps.any((element) => element.id == stump.id);
+
+    print(stumpIsEdited);
+
+    if (stumpIsEdited == true) {
+      setState(() {
+        final stumpIndex =
+            _stumps.indexWhere((element) => element.id == stump.id);
+        _stumps.removeAt(stumpIndex);
+        _stumps.insert(stumpIndex, stump);
+      });
+    } else {
+      setState(() {
+        _stumps.add(stump);
+      });
+    }
   }
 
   void saveProject() {
@@ -400,7 +410,7 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => AddStumpView(
+                        builder: (context) => AddorEditStumpView(
                           addStumpToProject: addStumpToProject,
                         ),
                       ),
@@ -449,11 +459,24 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
                                           Text('Width: ${stump.width} inch'),
                                           Text('Height: ${stump.height} inch'),
                                           Text('Cost: \$ ${stump.cost}'),
-                                          TextButton.icon(
-                                            onPressed: () {},
-                                            icon: const Icon(Icons.edit),
-                                            label: const Text('Edit Stump'),
-                                          )
+                                          widget.editableProject == null
+                                              ? const SizedBox()
+                                              : TextButton.icon(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddorEditStumpView(
+                                                        addStumpToProject:
+                                                            addStumpToProject,
+                                                        editableStump: stump,
+                                                      ),
+                                                    ));
+                                                  },
+                                                  icon: const Icon(Icons.edit),
+                                                  label:
+                                                      const Text('Edit Stump'),
+                                                )
                                         ],
                                       ),
                                     ),
