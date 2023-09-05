@@ -8,7 +8,6 @@ class ProjectsController extends StateNotifier<List<ProjectModel>> {
   ProjectsController() : super([]);
 
   void addProject(ProjectModel project) async {
-    print('adding');
     final prefs = await SharedPreferences.getInstance();
     final encodedData = jsonEncode(project);
     final newState = [...state, project];
@@ -38,8 +37,6 @@ class ProjectsController extends StateNotifier<List<ProjectModel>> {
   }
 
   void editProjects(ProjectModel project) async {
-    print('editing');
-
     final prefs = await SharedPreferences.getInstance();
 
     final projectIndex =
@@ -49,7 +46,7 @@ class ProjectsController extends StateNotifier<List<ProjectModel>> {
 
     final encodedData = jsonEncode(project);
     // -------------------------------------------------------------------------
-    final newState = [...state, project];
+    final newState = [...state];
     state = newState;
     // -------------------------------------------------------------------------
     prefs.setString(project.id, encodedData);

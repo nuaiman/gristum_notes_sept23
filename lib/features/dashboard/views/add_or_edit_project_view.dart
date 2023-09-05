@@ -168,8 +168,8 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
           );
 
     widget.editableProject != null
-        ? ref.read(projectsControllerProvider.notifier).addProject(project)
-        : ref.read(projectsControllerProvider.notifier).editProjects(project);
+        ? ref.read(projectsControllerProvider.notifier).editProjects(project)
+        : ref.read(projectsControllerProvider.notifier).addProject(project);
 
     Navigator.of(context).pop();
   }
