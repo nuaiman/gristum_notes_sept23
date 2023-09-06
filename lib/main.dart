@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'features/dashboard/views/dashboard_view.dart';
 
 void main() {
+  // inside image_painter change address to package name (when changing)
   runApp(const ProviderScope(child: GristumNotesApp()));
 }
 

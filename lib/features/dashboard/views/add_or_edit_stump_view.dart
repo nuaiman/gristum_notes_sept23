@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gristum_notes_app/features/dashboard/controllers/settings_controller.dart';
 import 'package:gristum_notes_app/features/dashboard/views/video_player_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
@@ -37,7 +38,10 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
 
   String _note = '';
 
-  void getStumpPrice(double height, double width, double price) {
+  void getStumpPrice(double height, double width, double price) async {
+    final double hightLimit = ref.read(settingsControllerProvider).height;
+    final double percentLimit = ref.read(settingsControllerProvider).percent;
+
     // Tree dimensions
     double widthInch = double.parse(_width);
     double heightInch = double.parse(_height);
@@ -51,21 +55,30 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
     // Calculate price for height
     double heightPrice = 0;
 
-    if (heightInch > 24) {
-      // Price for the first 12 inches (free)
-      heightPrice += totalWidthPrice * 0 * 12;
+    // if (heightInch > 24) {
+    //   // Price for the first 12 inches (free)
+    //   heightPrice += totalWidthPrice * 0 * 12;
+    //   // Price for the next 12 inches (from 12 - 24 inches)
+    //   heightPrice += totalWidthPrice * 0.01 * (heightInch - 24 - 12);
+    //   // Price for anything above 24 inches
+    //   heightPrice += totalWidthPrice * 0.2;
+    // } else if (heightInch > 12) {
+    //   // Price for the first 12 inches (free)
+    //   heightPrice += totalWidthPrice * 0 * 12;
+    //   // Price for the next (heightInch - 12) inches
+    //   heightPrice += totalWidthPrice * 0.01 * (heightInch - 12);
+    // } else {
+    //   // Price for the first (heightInch) inches (free)
+    //   heightPrice += totalWidthPrice * 0 * heightInch;
+    // }
 
-      // Price for the next 12 inches (from 12 - 24 inches)
-      heightPrice += totalWidthPrice * 0.01 * (heightInch - 24 - 12);
-
-      // Price for anything above 24 inches
-      heightPrice += totalWidthPrice * 0.2;
-    } else if (heightInch > 12) {
+    if (heightInch > hightLimit) {
       // Price for the first 12 inches (free)
-      heightPrice += totalWidthPrice * 0 * 12;
+      heightPrice += totalWidthPrice * 0 * hightLimit;
 
       // Price for the next (heightInch - 12) inches
-      heightPrice += totalWidthPrice * 0.01 * (heightInch - 12);
+      heightPrice +=
+          totalWidthPrice * (percentLimit / 100) * (heightInch - hightLimit);
     } else {
       // Price for the first (heightInch) inches (free)
       heightPrice += totalWidthPrice * 0 * heightInch;

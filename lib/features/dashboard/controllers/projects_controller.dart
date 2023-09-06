@@ -23,6 +23,12 @@ class ProjectsController extends StateNotifier<List<ProjectModel>> {
 
     if (projectIdsList.isNotEmpty) {
       for (String i in projectIdsList) {
+        // if (i == 'hightLimit') {
+        //   return;
+        // }
+        // if (i == 'percentLimit') {
+        //   return;
+        // }
         final projectJson = prefs.getString(i);
         final decodedJson = jsonDecode(projectJson!);
         final project = ProjectModel.fromJson(decodedJson);

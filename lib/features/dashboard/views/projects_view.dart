@@ -7,6 +7,7 @@ import 'package:gristum_notes_app/features/dashboard/controllers/projects_contro
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../controllers/settings_controller.dart';
 import 'add_or_edit_project_view.dart';
 
 class ProjectsView extends ConsumerStatefulWidget {
@@ -20,6 +21,7 @@ class _ProjectsViewState extends ConsumerState<ProjectsView> {
   @override
   void initState() {
     ref.read(projectsControllerProvider.notifier).loadProjects();
+    ref.read(settingsControllerProvider.notifier).loadSettings();
     super.initState();
   }
 

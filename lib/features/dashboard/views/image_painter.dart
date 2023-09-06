@@ -19,6 +19,7 @@ class ImagePainterViewState extends State<ImagePainterView> {
   void saveImage() async {
     final image = await _imageKey.currentState!.exportImage();
 
+    // Change this when changing package name
     File file = File(
         '/data/user/0/com.example.gristum_notes_app/cache/${DateTime.now().toString()}.jpg');
     final editedImage = await file.writeAsBytes(image!);

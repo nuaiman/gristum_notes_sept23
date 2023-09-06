@@ -158,8 +158,6 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
       return total;
     }
 
-    print(widget.editableProject);
-
     final project = widget.editableProject != null
         ? widget.editableProject!.copyWith(
             id: widget.editableProject!.id,
