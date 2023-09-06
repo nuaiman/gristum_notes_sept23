@@ -15,7 +15,7 @@ class CancelledView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Projects')),
+      appBar: AppBar(title: const Text('Cancelled')),
       body: ListView.builder(
         itemCount: ref
             .watch(projectsControllerProvider)

@@ -26,7 +26,7 @@ class _ProjectsViewState extends ConsumerState<ProjectsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Projects')),
+      appBar: AppBar(title: const Text('Active')),
       // -----------------------------------------------------------------------
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

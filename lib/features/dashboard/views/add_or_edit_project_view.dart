@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:gristum_notes_app/models/stump_model.dart';
@@ -580,15 +581,34 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
                                         scrollDirection: Axis.horizontal,
                                         itemCount: stump.imagesPath.length,
                                         itemBuilder: (context, index) =>
-                                            SizedBox(
-                                          width: 60,
-                                          height: 60,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(6),
-                                            child: Image.file(
-                                              File(stump.imagesPath[index]),
-                                              fit: BoxFit.cover,
+                                            GestureDetector(
+                                          onTap: () {
+                                            List<ImageProvider> listOfFiles =
+                                                [];
+                                            for (String i in stump.imagesPath) {
+                                              listOfFiles.add(
+                                                  Image.file(File(i)).image);
+                                            }
+
+                                            MultiImageProvider
+                                                multiImageProvider =
+                                                MultiImageProvider(listOfFiles);
+
+                                            showImageViewerPager(
+                                                context, multiImageProvider,
+                                                swipeDismissible: true,
+                                                doubleTapZoomable: true);
+                                          },
+                                          child: SizedBox(
+                                            width: 60,
+                                            height: 60,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              child: Image.file(
+                                                File(stump.imagesPath[index]),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
                                         ),

@@ -15,7 +15,7 @@ class CompletedView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Projects')),
+      appBar: AppBar(title: const Text('Complete')),
       body: ListView.builder(
         itemCount: ref
             .watch(projectsControllerProvider)
