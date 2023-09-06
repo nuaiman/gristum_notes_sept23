@@ -3,6 +3,7 @@ import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:geocoding/geocoding.dart' as geo;
+import 'package:gristum_notes_app/features/dashboard/controllers/notification_controller.dart';
 import 'package:gristum_notes_app/models/stump_model.dart';
 import 'package:location/location.dart';
 
@@ -338,10 +339,10 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
                               setState(() {
                                 _firstCallDate = firstDate;
                               });
-                              NotificationService().scheduleNotification(
-                                  title: 'Scheduled Notification',
-                                  body: _nameController,
-                                  scheduledNotificationDateTime: firstDate);
+                              // NotificationService().scheduleNotification(
+                              //     title: 'Scheduled Notification',
+                              //     body: _nameController,
+                              //     scheduledNotificationDateTime: firstDate);
                             }
                           },
                           child: _firstCallDate != null
@@ -358,6 +359,8 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
                         title: const Text('Next Call Date'),
                         subtitle: GestureDetector(
                           onTap: () async {
+                            final notificationController =
+                                ref.read(notificationControllerProvider);
                             final nextDate =
                                 await DatePicker.showDateTimePicker(
                               context,
@@ -369,10 +372,33 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
                               setState(() {
                                 _nextCallDate = nextDate;
                               });
-                              NotificationService().scheduleNotification(
+                              if (notificationController.allowed &&
+                                  notificationController.twoDays) {
+                                NotificationService().scheduleNotification(
                                   title: 'Scheduled Notification',
                                   body: _nameController,
-                                  scheduledNotificationDateTime: nextDate);
+                                  scheduledNotificationDateTime: nextDate
+                                      .subtract(const Duration(days: 2)),
+                                );
+                              }
+                              if (notificationController.allowed &&
+                                  notificationController.oneDay) {
+                                NotificationService().scheduleNotification(
+                                  title: 'Scheduled Notification',
+                                  body: _nameController,
+                                  scheduledNotificationDateTime: nextDate
+                                      .subtract(const Duration(days: 1)),
+                                );
+                              }
+                              if (notificationController.allowed &&
+                                  notificationController.oneHour) {
+                                NotificationService().scheduleNotification(
+                                  title: 'Scheduled Notification',
+                                  body: _nameController,
+                                  scheduledNotificationDateTime: nextDate
+                                      .subtract(const Duration(hours: 1)),
+                                );
+                              }
                             }
                           },
                           child: _nextCallDate != null
