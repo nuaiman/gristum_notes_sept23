@@ -660,6 +660,18 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
                     },
                   ),
                 ),
+              if (widget.editableProject != null)
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        ref
+                            .read(projectsControllerProvider.notifier)
+                            .deleteProject(widget.editableProject!);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Delete')),
+                ),
             ],
           ),
         ),

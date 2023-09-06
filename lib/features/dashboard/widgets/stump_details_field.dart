@@ -4,6 +4,7 @@ class StumpDetailsField extends StatelessWidget {
   final String labelText;
   final bool needColumn;
   final String initialValue;
+  final bool isNote;
   final Function(String value) onSetState;
 
   const StumpDetailsField({
@@ -11,6 +12,7 @@ class StumpDetailsField extends StatelessWidget {
     required this.labelText,
     required this.onSetState,
     required this.initialValue,
+    this.isNote = false,
     this.needColumn = false,
   });
 
@@ -46,6 +48,8 @@ class StumpDetailsField extends StatelessWidget {
               ),
               Expanded(
                 child: TextFormField(
+                  keyboardType:
+                      isNote ? TextInputType.name : TextInputType.number,
                   initialValue: initialValue,
                   onChanged: (value) {
                     if (value.isEmpty) {

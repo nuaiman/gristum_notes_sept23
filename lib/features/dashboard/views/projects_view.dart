@@ -47,9 +47,15 @@ class _ProjectsViewState extends ConsumerState<ProjectsView> {
       ),
       // -----------------------------------------------------------------------
       body: ListView.builder(
-        itemCount: ref.watch(projectsControllerProvider).length,
+        itemCount: ref
+            .watch(projectsControllerProvider)
+            .where((element) => element.isActive)
+            .length,
         itemBuilder: (context, index) {
-          final project = ref.watch(projectsControllerProvider)[index];
+          final project = ref
+              .watch(projectsControllerProvider)
+              .where((element) => element.isActive)
+              .toList()[index];
           return GestureDetector(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(

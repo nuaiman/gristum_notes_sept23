@@ -31,10 +31,10 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
   // File? _pickedVideo;
   List<File> _images = [];
 
-  String _height = '0';
-  String _width = '0';
-  String _price = '0';
-  String _cost = '0';
+  String _height = '';
+  String _width = '';
+  String _price = '';
+  String _cost = '';
 
   String _note = '';
 
@@ -229,8 +229,11 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
 
   @override
   Widget build(BuildContext context) {
-    getStumpPrice(
-        double.parse(_height), double.parse(_width), double.parse(_price));
+    if (_height.isNotEmpty && _width.isNotEmpty && _price.isNotEmpty) {
+      getStumpPrice(
+          double.parse(_height), double.parse(_width), double.parse(_price));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.editableStump == null ? 'Add Stump' : 'Edit Stump'),
@@ -282,6 +285,7 @@ class _AddStumpViewState extends ConsumerState<AddorEditStumpView> {
                 children: [
                   Expanded(
                     child: StumpDetailsField(
+                      isNote: true,
                       initialValue: _note,
                       needColumn: false,
                       labelText: 'Notes',

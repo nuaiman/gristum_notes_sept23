@@ -17,9 +17,27 @@ class ProjectsController extends StateNotifier<List<ProjectModel>> {
     prefs.setString(project.id, encodedData);
   }
 
+  void deleteProject(ProjectModel project) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.remove(project.id);
+
+    state.removeWhere((element) => element.id == project.id);
+
+    final newState = [...state];
+    state = newState;
+  }
+
   void loadProjects() async {
     final prefs = await SharedPreferences.getInstance();
     final projectIdsList = prefs.getKeys();
+
+    projectIdsList.remove('hightLimit');
+    projectIdsList.remove('percentLimit');
+    projectIdsList.remove('allowed');
+    projectIdsList.remove('2Days');
+    projectIdsList.remove('1Day');
+    projectIdsList.remove('1Hour');
 
     if (projectIdsList.isNotEmpty) {
       for (String i in projectIdsList) {
@@ -36,6 +54,8 @@ class ProjectsController extends StateNotifier<List<ProjectModel>> {
           return;
         }
         state.add(project);
+        final newState = [...state];
+        state = newState.toSet().toList();
       }
       final newState = [...state];
       state = newState.toSet().toList();
