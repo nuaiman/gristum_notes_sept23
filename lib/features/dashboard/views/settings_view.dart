@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gristum_notes_app/features/dashboard/controllers/notification_controller.dart';
 import 'package:gristum_notes_app/features/dashboard/controllers/projects_controller.dart';
 import 'package:gristum_notes_app/features/dashboard/controllers/settings_controller.dart';
 import 'package:gristum_notes_app/models/project_model.dart';
@@ -157,6 +158,52 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                 ),
               ],
             ),
+          ),
+          Column(
+            children: [
+              const Text('Notifications'),
+              SwitchListTile(
+                title: const Text('Allow Notification'),
+                value: ref.watch(notificationControllerProvider).allowed,
+                onChanged: (value) {
+                  ref
+                      .read(notificationControllerProvider.notifier)
+                      .updateAllowedNotification(value);
+                },
+              ),
+              if (ref.watch(notificationControllerProvider).allowed == true)
+                Column(
+                  children: [
+                    SwitchListTile(
+                      title: const Text('2 Days Before'),
+                      value: ref.watch(notificationControllerProvider).twoDays,
+                      onChanged: (value) {
+                        ref
+                            .read(notificationControllerProvider.notifier)
+                            .update2DaysNotification(value);
+                      },
+                    ),
+                    SwitchListTile(
+                      title: const Text('1 Day Before'),
+                      value: ref.watch(notificationControllerProvider).oneDay,
+                      onChanged: (value) {
+                        ref
+                            .read(notificationControllerProvider.notifier)
+                            .update1DayNotification(value);
+                      },
+                    ),
+                    SwitchListTile(
+                      title: const Text('1 Hour Before'),
+                      value: ref.watch(notificationControllerProvider).oneHour,
+                      onChanged: (value) {
+                        ref
+                            .read(notificationControllerProvider.notifier)
+                            .update1HourNotification(value);
+                      },
+                    ),
+                  ],
+                ),
+            ],
           ),
         ],
       ),

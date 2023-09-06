@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gristum_notes_app/features/dashboard/controllers/notification_controller.dart';
 import 'package:gristum_notes_app/features/dashboard/controllers/projects_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
@@ -22,6 +23,7 @@ class _ProjectsViewState extends ConsumerState<ProjectsView> {
   void initState() {
     ref.read(projectsControllerProvider.notifier).loadProjects();
     ref.read(settingsControllerProvider.notifier).loadSettings();
+    ref.read(notificationControllerProvider.notifier).loadNotificationStatus();
     super.initState();
   }
 
