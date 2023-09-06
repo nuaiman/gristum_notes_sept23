@@ -32,6 +32,8 @@ class _ProjectsViewState extends ConsumerState<ProjectsView> {
       // -----------------------------------------------------------------------
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
+          // NotificationService()
+          //     .showNotification(title: 'Sample title', body: 'It works!');
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const AddorEditProjectView(),

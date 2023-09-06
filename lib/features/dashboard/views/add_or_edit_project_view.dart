@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:gristum_notes_app/models/stump_model.dart';
@@ -12,6 +13,7 @@ import 'package:gristum_notes_app/core/utils.dart';
 import 'package:gristum_notes_app/models/project_model.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
+import '../../services/notification_services.dart';
 import '../controllers/projects_controller.dart';
 import 'add_or_edit_stump_view.dart';
 import 'video_player_view.dart';
@@ -325,16 +327,21 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
                         title: const Text('First Call Date'),
                         subtitle: GestureDetector(
                           onTap: () async {
-                            final firstDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2022),
-                              lastDate: DateTime(3022),
+                            final firstDate =
+                                await DatePicker.showDateTimePicker(
+                              context,
+                              showTitleActions: true,
+                              onChanged: (date) => _firstCallDate = date,
+                              onConfirm: (date) {},
                             );
                             if (firstDate != null) {
                               setState(() {
                                 _firstCallDate = firstDate;
                               });
+                              NotificationService().scheduleNotification(
+                                  title: 'Scheduled Notification',
+                                  body: _nameController,
+                                  scheduledNotificationDateTime: firstDate);
                             }
                           },
                           child: _firstCallDate != null
@@ -351,16 +358,21 @@ class _AddProjectViewState extends ConsumerState<AddorEditProjectView> {
                         title: const Text('Next Call Date'),
                         subtitle: GestureDetector(
                           onTap: () async {
-                            final nextDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2022),
-                              lastDate: DateTime(3022),
+                            final nextDate =
+                                await DatePicker.showDateTimePicker(
+                              context,
+                              showTitleActions: true,
+                              onChanged: (date) => _nextCallDate = date,
+                              onConfirm: (date) {},
                             );
                             if (nextDate != null) {
                               setState(() {
                                 _nextCallDate = nextDate;
                               });
+                              NotificationService().scheduleNotification(
+                                  title: 'Scheduled Notification',
+                                  body: _nameController,
+                                  scheduledNotificationDateTime: nextDate);
                             }
                           },
                           child: _nextCallDate != null
